@@ -16,7 +16,7 @@ inputs:
     description: The check's short name, used with ping-key instead of url.
     required: false
   status:
-    description: "What to report: start, success, fail, log, an exit code (0-255), or a job status (pass ${{ job.status }})."
+    description: "What to report: start, success, fail, log, an exit code (0-255), or the job status (job.status)."
     required: false
     default: success
   body:
