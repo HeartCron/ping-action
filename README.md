@@ -1,5 +1,7 @@
 # Heartcron ping action
 
+[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-Heartcron%20ping-blue?logo=github)](https://github.com/marketplace/actions/heartcron-ping)
+
 Know when a scheduled GitHub Actions workflow fails, runs late or doesn’t run at all.
 
 Scheduled workflows are easy to lose track of: GitHub can delay or drop runs under load, and it switches schedules off in repositories without activity for 60 days. A failed run only shows up if someone looks. This action pings [Heartcron](https://heartcron.com) at the start and end of a job, and Heartcron alerts you in Telegram, Slack, Discord or email when the result is a failure or when no ping arrives on schedule.
