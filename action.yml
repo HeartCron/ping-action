@@ -1,0 +1,52 @@
+name: Heartcron ping
+description: Tell Heartcron that a scheduled workflow started, succeeded or failed, and get an alert when it doesn't run.
+author: Heartcron
+branding:
+  icon: activity
+  color: blue
+
+inputs:
+  url:
+    description: The check's ping URL, such as https://ping.heartcron.com/<uuid>. Keep it in a secret.
+    required: false
+  ping-key:
+    description: The project's ping key, used with slug instead of url.
+    required: false
+  slug:
+    description: The check's short name, used with ping-key instead of url.
+    required: false
+  status:
+    description: "What to report: start, success, fail, log, an exit code (0-255), or a job status (pass ${{ job.status }})."
+    required: false
+    default: success
+  body:
+    description: Text to attach to the ping, such as the last lines of a log (up to 100 KB is kept).
+    required: false
+  create:
+    description: With ping-key and slug, create the check on its first ping if it doesn't exist.
+    required: false
+    default: "false"
+  base-url:
+    description: Ping endpoint for ping-key and slug.
+    required: false
+    default: https://ping.heartcron.com
+  fail-on-error:
+    description: Fail the step if the ping can't be delivered. By default a failed ping only prints a warning.
+    required: false
+    default: "false"
+
+runs:
+  using: composite
+  steps:
+    - name: Ping Heartcron
+      shell: bash
+      env:
+        HC_URL: ${{ inputs.url }}
+        HC_PING_KEY: ${{ inputs.ping-key }}
+        HC_SLUG: ${{ inputs.slug }}
+        HC_STATUS: ${{ inputs.status }}
+        HC_BODY: ${{ inputs.body }}
+        HC_CREATE: ${{ inputs.create }}
+        HC_BASE: ${{ inputs.base-url }}
+        HC_STRICT: ${{ inputs.fail-on-error }}
+      run: "$GITHUB_ACTION_PATH/ping.sh"
