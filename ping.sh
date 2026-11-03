@@ -44,7 +44,11 @@ if [ "${HC_CREATE:-false}" = "true" ] && [ -z "${HC_URL:-}" ]; then
 fi
 
 args=(-fsS -m 10 --retry 3 -o /dev/null -A "heartcron-ping-action/1")
-if [ -n "${HC_BODY:-}" ]; then
+if [ -n "${HC_BODY_FILE:-}" ] && [ -f "$HC_BODY_FILE" ]; then
+  if ! tail -c 100000 "$HC_BODY_FILE" | curl "${args[@]}" --data-binary @- "$url"; then
+    warn "Heartcron: the ping didn't go through"
+  fi
+elif [ -n "${HC_BODY:-}" ]; then
   if ! printf '%s' "$HC_BODY" | curl "${args[@]}" --data-binary @- "$url"; then
     warn "Heartcron: the ping didn't go through"
   fi

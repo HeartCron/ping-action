@@ -33,6 +33,9 @@ jobs:
         with: { url: "http://127.0.0.1:8099/abc", status: failure, body: "disk full" }
       - uses: ./
         with: { url: "http://127.0.0.1:8099/abc", status: "3" }
+      - run: printf 'line one\nlast line' > job.log
+      - uses: ./
+        with: { url: "http://127.0.0.1:8099/abc", status: success, body-file: job.log }
       - uses: ./
         with: { ping-key: k1, slug: nightly, base-url: "http://127.0.0.1:8099", create: "true" }
       - name: A failed ping only warns
@@ -41,4 +44,4 @@ jobs:
       - name: Check what the endpoint got
         run: |
           cat /tmp/pings.log
-          diff <(printf '%s\n' "GET /abc/start " "GET /abc " "POST /abc/fail disk full" "GET /abc/3 " "GET /k1/nightly?create=1 ") /tmp/pings.log
+          diff <(printf '%s\n' "GET /abc/start " "GET /abc " "POST /abc/fail disk full" "GET /abc/3 " "POST /abc line one" "last line" "GET /k1/nightly?create=1 ") /tmp/pings.log

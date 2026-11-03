@@ -22,6 +22,9 @@ inputs:
   body:
     description: Text to attach to the ping, such as the last lines of a log (up to 100 KB is kept).
     required: false
+  body-file:
+    description: A file whose last 100 KB to attach to the ping, such as a log your job wrote.
+    required: false
   create:
     description: With ping-key and slug, create the check on its first ping if it doesn't exist.
     required: false
@@ -46,6 +49,7 @@ runs:
         HC_SLUG: ${{ inputs.slug }}
         HC_STATUS: ${{ inputs.status }}
         HC_BODY: ${{ inputs.body }}
+        HC_BODY_FILE: ${{ inputs.body-file }}
         HC_CREATE: ${{ inputs.create }}
         HC_BASE: ${{ inputs.base-url }}
         HC_STRICT: ${{ inputs.fail-on-error }}

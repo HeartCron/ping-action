@@ -43,12 +43,15 @@ jobs:
 | `url` | | The check’s ping URL. Keep it in a secret. |
 | `ping-key`, `slug` | | Instead of `url`: the project’s ping key and the check’s short name. |
 | `status` | `success` | `start`, `success`, `fail`, `log`, an exit code `0`–`255`, or `${{ job.status }}` (`failure` and `cancelled` count as failures). |
-| `body` | | Text attached to the ping, such as the end of a log. Up to 100 KB is kept on paid plans, 10 KB on Free. |
+| `body` | | Text attached to the ping. Up to 100 KB is kept on paid plans, 10 KB on Free. |
+| `body-file` | | A file whose last 100 KB to attach, such as a log your job wrote. |
 | `create` | `false` | With `ping-key` and `slug`: create the check on its first ping. |
 | `base-url` | `https://ping.heartcron.com` | Ping endpoint for `ping-key` and `slug`. |
 | `fail-on-error` | `false` | Fail the step when the ping can’t be delivered. By default it only prints a warning, so monitoring never breaks your workflow. |
 
 ## Attach a log
+
+Write the job’s output to a file and pass it as `body-file`: the last 100 KB goes along with the ping and shows up on the check’s page in Heartcron.
 
 ```yaml
       - run: ./scripts/sync.sh 2>&1 | tee sync.log
@@ -57,10 +60,8 @@ jobs:
         with:
           url: ${{ secrets.HEARTCRON_URL }}
           status: ${{ job.status }}
-          body: ${{ hashFiles('sync.log') && 'see sync.log in the run' || '' }}
+          body-file: sync.log
 ```
-
-Or send the last lines with a plain `curl` step: `tail -c 10000 sync.log | curl -fsS --data-binary @- "$HEARTCRON_URL/fail"`.
 
 ## Without the action
 
